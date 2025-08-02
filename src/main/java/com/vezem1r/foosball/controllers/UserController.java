@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public UserController (UserService userService) {
-        this.userService = userService;
-    }
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @MutationMapping
-    public Long registerUser(@Argument RegisterInput input) {
-        return userService.register(input);
-    }
+  @MutationMapping
+  public Long registerUser(@Argument RegisterInput input) {
+    return userService.register(input);
+  }
 }

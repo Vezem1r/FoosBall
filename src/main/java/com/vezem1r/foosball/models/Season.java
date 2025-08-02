@@ -2,13 +2,12 @@ package com.vezem1r.foosball.models;
 
 import com.vezem1r.foosball.models.enums.MatchFormat;
 import jakarta.persistence.*;
+import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.OffsetDateTime;
-import java.util.List;
 
 @Entity
 @Data
@@ -18,21 +17,21 @@ import java.util.List;
 @Table(name = "seasons")
 public class Season {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String title;
+  private String title;
 
-    @Column(nullable = false)
-    private OffsetDateTime startDate;
+  @Column(nullable = false)
+  private OffsetDateTime startDate;
 
-    @Column(nullable = false)
-    private OffsetDateTime endDate;
+  @Column(nullable = false)
+  private OffsetDateTime endDate;
 
-    @Enumerated(EnumType.STRING)
-    private MatchFormat matchFormat;
+  @Enumerated(EnumType.STRING)
+  private MatchFormat matchFormat;
 
-    @OneToMany(mappedBy = "seasons")
-    private List<Team> teams;
+  @OneToMany(mappedBy = "seasons")
+  private List<Team> teams;
 }

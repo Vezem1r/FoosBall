@@ -15,23 +15,23 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String username;
+  @Column(unique = true, nullable = false)
+  private String username;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+  @Column(unique = true, nullable = false)
+  private String email;
 
-    @Column(nullable = false)
-    private String avatarUrl;
+  @Column(nullable = false)
+  private String avatarUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Roles role;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Roles role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Player player;
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  private Player player;
 }

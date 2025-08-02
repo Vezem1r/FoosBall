@@ -4,5 +4,5 @@ import com.vezem1r.foosball.domain.RegisterInput;
 
 public interface UserService {
 
-    Long register(RegisterInput input);
+  Long register(RegisterInput input);
 }

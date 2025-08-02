@@ -14,20 +14,20 @@ import lombok.NoArgsConstructor;
 @Table(name = "players")
 public class Player {
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    private Boolean isCapitan;
+  @Column(nullable = false)
+  private Boolean isCapitan;
 
-    @Column(nullable = false)
-    private Boolean isLooking;
+  @Column(nullable = false)
+  private Boolean isLooking;
 
-    @Column(nullable = false)
-    private Boolean isSkipping;
+  @Column(nullable = false)
+  private Boolean isSkipping;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
-    private User user;
+  @OneToOne
+  @JoinColumn(name = "user_id", nullable = false, unique = true)
+  private User user;
 }

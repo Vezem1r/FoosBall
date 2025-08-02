@@ -10,21 +10,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  public UserServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    @Override
-    public Long register(RegisterInput input) {
-        User user = User.builder()
-                .username(input.username())
-                .email(input.email())
-                .avatarUrl(input.avatarUrl())
-                .role(Roles.PLAYER)
-                .build();
+  @Override
+  public Long register(RegisterInput input) {
+    User user =
+        User.builder()
+            .username(input.username())
+            .email(input.email())
+            .avatarUrl(input.avatarUrl())
+            .role(Roles.PLAYER)
+            .build();
 
-        return userRepository.upsert(user);
-    }
+    return userRepository.upsert(user);
+  }
 }

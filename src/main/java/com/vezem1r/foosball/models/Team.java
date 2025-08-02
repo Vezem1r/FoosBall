@@ -14,23 +14,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "teams")
 public class Team {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String name;
+  @Column(unique = true, nullable = false)
+  private String name;
 
-    @Column(nullable = false)
-    private String avatarUrl;
+  @Column(nullable = false)
+  private String avatarUrl;
 
-    @OneToOne
-    @JoinColumn(nullable = false)
-    private Player capitan;
+  @OneToOne
+  @JoinColumn(nullable = false)
+  private Player capitan;
 
-    @OneToOne
-    private Player teammate;
+  @OneToOne private Player teammate;
 
-    @ManyToOne
-    private  Season season;
+  @ManyToOne private Season season;
 }
