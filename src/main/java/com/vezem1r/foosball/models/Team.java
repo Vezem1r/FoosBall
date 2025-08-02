@@ -1,6 +1,5 @@
 package com.vezem1r.foosball.models;
 
-import com.vezem1r.foosball.models.enums.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,26 +11,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "users")
-public class User {
+@Table(name = "teams")
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
-
-    @Column(unique = true, nullable = false)
-    private String email;
+    private String name;
 
     @Column(nullable = false)
     private String avatarUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Roles role;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private Player capitan;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Player player;
+    @OneToOne
+    private Player teammate;
+
+    @ManyToOne
+    private  Season season;
 }
