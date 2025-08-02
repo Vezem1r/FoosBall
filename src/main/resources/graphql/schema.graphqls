@@ -1,0 +1,30 @@
+type Mutation {
+    registerUser(input: RegisterInput!): User!
+}
+
+input RegisterInput {
+    username: String!
+    email: String!
+    avatarUrl: String!
+}
+
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    avatarUrl: String!
+    role: Roles!
+    player: Player
+}
+
+enum Roles {
+    ADMIN
+    PLAYER
+}
+
+type Player {
+    id: ID!
+    isCapitan: Boolean!
+    isLooking: Boolean!
+    isSkipping: Boolean!
+}
