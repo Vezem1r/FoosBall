@@ -1,3 +1,7 @@
+type Query {
+    ping: String
+}
+
 type Mutation {
     registerUser(input: RegisterInput!): User!
 }

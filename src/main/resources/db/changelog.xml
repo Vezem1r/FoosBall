@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+<changeSet id="1" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS users (
+                                                 id BIGSERIAL PRIMARY KEY,
+                                                 username VARCHAR(50) NOT NULL UNIQUE,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password_hash VARCHAR(255),
+                avatar_url VARCHAR(500),
+                oauth_provider VARCHAR(20),
+                oauth_id VARCHAR(255),
+                role VARCHAR(20) NOT NULL DEFAULT 'player',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                last_login_at TIMESTAMP,
+                is_looking_for_team BOOLEAN DEFAULT FALSE,
+                is_active BOOLEAN DEFAULT TRUE,
+                CONSTRAINT check_oauth_provider CHECK (oauth_provider IN ('google', 'github', 'facebook') OR oauth_provider IS NULL),
+                CONSTRAINT check_role CHECK (role IN ('player', 'admin'))
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="2" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS teams (
+                                                 id BIGSERIAL PRIMARY KEY,
+                                                 name VARCHAR(100) NOT NULL UNIQUE,
+                captain_id BIGINT NOT NULL REFERENCES users(id),
+                partner_id BIGINT REFERENCES users(id),
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                is_looking_for_player BOOLEAN DEFAULT FALSE,
+                is_active BOOLEAN DEFAULT TRUE
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="3" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS seasons (
+                                                   id BIGSERIAL PRIMARY KEY,
+                                                   name VARCHAR(100) NOT NULL,
+                start_date DATE NOT NULL,
+                end_date DATE NOT NULL,
+                match_format VARCHAR(10) NOT NULL,
+                is_active BOOLEAN DEFAULT FALSE,
+                created_by BIGINT NOT NULL REFERENCES users(id),
+                CONSTRAINT check_match_format CHECK (match_format IN ('BO1', 'BO3', 'BO5'))
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="4" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS team_seasons (
+                                                        id BIGSERIAL PRIMARY KEY,
+                                                        team_id BIGINT NOT NULL REFERENCES teams(id),
+                season_id BIGINT NOT NULL REFERENCES seasons(id),
+                wins INT DEFAULT 0,
+                losses INT DEFAULT 0,
+                points INT DEFAULT 0,
+                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT uk_team_season UNIQUE (team_id, season_id)
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="5" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS matches (
+                                                   id BIGSERIAL PRIMARY KEY,
+                                                   season_id BIGINT NOT NULL REFERENCES seasons(id),
+                team1_id BIGINT NOT NULL REFERENCES teams(id),
+                team2_id BIGINT NOT NULL REFERENCES teams(id),
+                team1_score INT,
+                team2_score INT,
+                winner_team_id BIGINT REFERENCES teams(id),
+                status VARCHAR(20) NOT NULL DEFAULT 'scheduled',
+                played_at TIMESTAMP,
+                reported_by_team_id BIGINT REFERENCES teams(id),
+                reported_at TIMESTAMP,
+                confirmed_at TIMESTAMP,
+                scheduled_date DATE,
+                CONSTRAINT check_match_status CHECK (status IN ('scheduled', 'played', 'confirmed', 'disputed'))
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="6" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS player_statistics (
+                                                             id BIGSERIAL PRIMARY KEY,
+                                                             user_id BIGINT NOT NULL REFERENCES users(id),
+                season_id BIGINT REFERENCES seasons(id),
+                wins INT DEFAULT 0,
+                losses INT DEFAULT 0,
+                matches_played INT DEFAULT 0,
+                CONSTRAINT uk_player_statistics UNIQUE (user_id, season_id)
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="7" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS team_invitations (
+                                                            id BIGSERIAL PRIMARY KEY,
+                                                            team_id BIGINT NOT NULL REFERENCES teams(id),
+                invited_user_id BIGINT NOT NULL REFERENCES users(id),
+                invited_by_user_id BIGINT NOT NULL REFERENCES users(id),
+                status VARCHAR(20) NOT NULL DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                responded_at TIMESTAMP,
+                expires_at TIMESTAMP NOT NULL,
+                CONSTRAINT check_invitation_status CHECK (status IN ('pending', 'accepted', 'declined', 'expired'))
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="8" author="vezem1r">
+        <sql>
+            CREATE TABLE IF NOT EXISTS notifications (
+                                                         id BIGSERIAL PRIMARY KEY,
+                                                         user_id BIGINT NOT NULL REFERENCES users(id),
+                type VARCHAR(30) NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                message TEXT NOT NULL,
+                related_id BIGINT,
+                is_read BOOLEAN DEFAULT FALSE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT check_notification_type CHECK (type IN ('team_invitation', 'match_result', 'match_confirmed', 'team_joined'))
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="9" author="vezem1r">
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_users_looking_for_team ON users(is_looking_for_team);
+            CREATE INDEX IF NOT EXISTS idx_teams_looking_for_player ON teams(is_looking_for_player);
+            CREATE INDEX IF NOT EXISTS idx_player_stats_user_season ON player_statistics(user_id, season_id);
+            CREATE INDEX IF NOT EXISTS idx_team_seasons_season ON team_seasons(season_id);
+            CREATE INDEX IF NOT EXISTS idx_matches_season_status ON matches(season_id, status);
+            CREATE INDEX IF NOT EXISTS idx_matches_teams ON matches(team1_id, team2_id, season_id);
+            CREATE INDEX IF NOT EXISTS idx_notifications_user_unread ON notifications(user_id, is_read);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
