@@ -81,6 +81,34 @@
 			<version>4.0.0</version>
 		</dependency>
 		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.soabase.record-builder</groupId>
+			<artifactId>record-builder-core</artifactId>
+			<version>34</version>
+		</dependency>
+		<dependency>
+			<groupId>io.soabase.record-builder</groupId>
+			<artifactId>record-builder-processor</artifactId>
+			<version>34</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -112,6 +140,12 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
+						</path>
+						<path>
+							<groupId>io.soabase.record-builder</groupId>
+							<artifactId>record-builder-processor</artifactId>
+							<version>34</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
@@ -163,6 +197,7 @@
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
 						</exclude>
 					</excludes>
 				</configuration>

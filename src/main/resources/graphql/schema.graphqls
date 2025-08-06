@@ -1,34 +1,44 @@
 type Query {
-    ping: String
+    usersWithoutTeam: [UserDTO!]!
+    allUsers: [UserDTO!]!
 }
 
 type Mutation {
-    registerUser(input: RegisterInput!): User!
+    registerUser(input: RegisterInput!): AuthResponse!
+    loginUser(input: LoginInput!): AuthResponse!
 }
 
 input RegisterInput {
     username: String!
     email: String!
-    avatarUrl: String!
+    password: String!
+    avatarUrl: String
 }
 
-type User {
+input LoginInput {
+    usernameOrEmail: String!
+    password: String!
+}
+
+type AuthResponse {
+    token: String!
+    user: UserDTO!
+    message: String!
+}
+
+type UserDTO {
     id: ID!
     username: String!
     email: String!
-    avatarUrl: String!
-    role: Roles!
-    player: Player
+    avatarUrl: String
+    role: String!
+    createdAt: String!
+    lastLoginAt: String
+    isLookingForTeam: Boolean!
+    isActive: Boolean!
 }
 
 enum Roles {
     ADMIN
     PLAYER
-}
-
-type Player {
-    id: ID!
-    isCapitan: Boolean!
-    isLooking: Boolean!
-    isSkipping: Boolean!
 }
